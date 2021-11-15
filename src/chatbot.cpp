@@ -30,6 +30,7 @@ ChatBot::ChatBot(std::string filename)
     _image = new wxBitmap(filename, wxBITMAP_TYPE_PNG);
 }
 
+// destructor
 ChatBot::~ChatBot()
 {
     std::cout << "ChatBot Destructor" << std::endl;
@@ -44,6 +45,71 @@ ChatBot::~ChatBot()
 
 //// STUDENT CODE
 ////
+// copy constructor
+ChatBot::ChatBot(const ChatBot &chatbot)
+{
+    std::cout << "ChatBot Copy Constructor" << std::endl;
+    // handle stack allocated members
+    _chatLogic = chatbot._chatLogic;
+    _rootNode  = chatbot._rootNode;
+    // handle heap allocated members wrt. deep copy policy
+    _image     = new wxBitmap();
+    *_image    = *(chatbot._image); 
+}
+
+// copy assignment operator
+ChatBot &ChatBot::operator=(const ChatBot &chatbot)
+{
+    std::cout << "ChatBot Copy Assignment Operator" << std::endl;
+    // protect self assignment
+    if(this == &chatbot)
+    {
+        return *this;
+    }
+    // handle stack allocated members
+    _chatLogic = chatbot._chatLogic;
+    _rootNode  = chatbot._rootNode;
+    // handle heap allocated members wrt. deep copy policy
+    delete _image;
+    _image     = new wxBitmap();
+    *_image    = *(chatbot._image);
+    return *this; 
+}
+
+// move constructor
+ChatBot::ChatBot(ChatBot &&chatbot)
+{ 
+    std::cout << "ChatBot Move Constructor" << std::endl;
+    // handle stack allocated members
+    _chatLogic         = chatbot._chatLogic;
+    _rootNode          = chatbot._rootNode;
+    chatbot._chatLogic = nullptr;
+    chatbot._rootNode  = nullptr;
+    // handle heap allocated members
+    _image             = chatbot._image;
+    chatbot._image     = NULL; 
+}
+
+// move assignment operator
+ChatBot &ChatBot::operator=(ChatBot &&chatbot)
+{
+    std::cout << "ChatBot Move Assignment Operator" << std::endl;
+    // protect self assignment
+    if(this == &chatbot)
+    {
+        return *this;
+    }
+    // handle stack allocated members
+    _chatLogic         = chatbot._chatLogic;
+    _rootNode          = chatbot._rootNode;
+    chatbot._chatLogic = nullptr;
+    chatbot._rootNode  = nullptr;
+    // handle heap allocated members
+    delete _image;
+    _image             = chatbot._image;
+    chatbot._image     = NULL;
+    return *this;
+}
 
 ////
 //// EOF STUDENT CODE
